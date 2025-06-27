@@ -33,10 +33,6 @@ services:
       timeout: 10s
       retries: 3
 
-volumes:
-  qdrant_data:
-  redis_data:
-
   rabbitmq:
     image: rabbitmq:3.12-management-alpine
     container_name: rabbitmq
@@ -56,4 +52,6 @@ volumes:
     restart: unless-stopped
 
 volumes:
+  qdrant_data:
+  redis_data:
   rabbitmq_data:
