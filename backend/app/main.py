@@ -124,3 +124,18 @@ if __name__ == "__main__":
         reload=settings.debug,
         log_level=settings.log_level.lower()
     )
+
+# Add Prometheus metrics endpoint
+from app.core.metrics import instrumentator
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+from fastapi.responses import Response
+
+# Instrument the app
+instrumentator.instrument(app).expose(app, endpoint="/metrics")
+
+@app.get("/metrics", include_in_schema=False)
+async def metrics():
+    return Response(
+        generate_latest(),
+        media_type=CONTENT_TYPE_LATEST
+    )

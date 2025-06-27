@@ -38,3 +38,7 @@ pytest-cov = "^6.0.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+# Monitoring dependencies
+prometheus-client = "^0.20.0"
+prometheus-fastapi-instrumentator = "^7.0.0"
