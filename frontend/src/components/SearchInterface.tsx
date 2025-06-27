@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, Search, Image, X, Loader2, Sparkles, CheckCircle, AlertCircle } from 'lucide-react';
+import { Upload, Search, Image, X, Loader2, Sparkles } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { searchImages, indexImage } from '../services/api';

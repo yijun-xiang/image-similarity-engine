@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { Activity, Database, Cpu, MemoryStick, Server, Zap, CheckCircle, XCircle } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadialBarChart, RadialBar, PieChart, Pie, Cell } from 'recharts';
+import { Activity, Database, MemoryStick, Server, Zap, CheckCircle, XCircle } from 'lucide-react';
 import { getStats, getHealth } from '../services/api';
 import { cn } from '../utils/cn';
 
@@ -24,24 +22,6 @@ export default function SystemMonitor() {
     const total = stats.cache.keyspace_hits + stats.cache.keyspace_misses;
     return ((stats.cache.keyspace_hits / total) * 100);
   };
-
-  const performanceData = [
-    {
-      name: 'Images Indexed',
-      value: stats?.collection.points_count || 0,
-      fill: '#3B82F6',
-    },
-    {
-      name: 'Cache Hit Rate',
-      value: getCacheHitRate(),
-      fill: '#10B981',
-    },
-    {
-      name: 'Memory Usage',
-      value: stats?.cache.used_memory ? (stats.cache.used_memory / 1024 / 1024) : 0,
-      fill: '#8B5CF6',
-    },
-  ];
 
   const serviceStatusData = health?.services ? 
     Object.entries(health.services).map(([service, status]) => ({
