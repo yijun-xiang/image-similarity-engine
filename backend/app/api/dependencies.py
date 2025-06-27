@@ -1,5 +1,5 @@
 from fastapi import Depends
-from app.services.ml_service import get_ml_service, MLService
+from app.services.ml_service_with_metrics import get_ml_service, MLService
 from app.services.vector_service import get_vector_service, VectorService
 from app.services.cache_service import get_cache_service, CacheService
 from app.config import get_settings, Settings

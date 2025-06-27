@@ -9,7 +9,7 @@ import uvicorn
 
 from app.config import get_settings
 from app.utils.logging import setup_logging
-from app.api.endpoints import search, health
+from app.api.endpoints import search, health, batch
 from app.services.ml_service import get_ml_service
 from app.services.vector_service import get_vector_service
 from app.services.cache_service import get_cache_service
@@ -81,6 +81,11 @@ app.include_router(
     tags=["Health"]
 )
 
+app.include_router(
+    batch.router,
+    prefix=settings.api_prefix,
+    tags=["Batch"])
+
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):
@@ -125,13 +130,8 @@ if __name__ == "__main__":
         log_level=settings.log_level.lower()
     )
 
-# Add Prometheus metrics endpoint
-from app.core.metrics import instrumentator
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from fastapi.responses import Response
-
-# Instrument the app
-instrumentator.instrument(app).expose(app, endpoint="/metrics")
 
 @app.get("/metrics", include_in_schema=False)
 async def metrics():

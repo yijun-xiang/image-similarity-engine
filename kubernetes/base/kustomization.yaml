@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: image-similarity
+
+resources:
+  - namespace.yaml
+  - backend/configmap.yaml
+  - backend/secret.yaml
+  - backend/deployment.yaml
+  - backend/service.yaml
+  - backend/hpa.yaml
+  - backend/celery-worker.yaml
+  - backend/ingress.yaml
+  - storage/qdrant.yaml
+  - storage/redis.yaml
+  - storage/rabbitmq.yaml
+  - storage/pvcs.yaml
+
+images:
+  - name: image-similarity-backend
+    newTag: latest
