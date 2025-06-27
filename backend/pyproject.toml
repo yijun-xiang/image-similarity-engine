@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "image-similarity-backend"
+version = "0.1.0"
+description = "Backend API for image similarity search engine"
+authors = ["Yijun Xiang <yijun.x@berkeley.edu>"]
+readme = "../docs/README.md"
+packages = [{include = "app"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.0"
+uvicorn = {extras = ["standard"], version = "^0.34.0"}
+transformers = "^4.53.0"
+torch = "^2.7.0"
+torchvision = "^0.22.0"
+pillow = "^11.2.0"
+numpy = "^2.3.0"
+qdrant-client = "^1.14.0"
+redis = "^5.0.0"
+celery = "^5.5.0"
+httpx = "^0.28.0"
+aiofiles = "^24.1.0"
+python-multipart = "^0.0.20"
+pydantic-settings = "^2.10.0"
+python-decouple = "^3.8"
+prometheus-client = "^0.21.1"
+structlog = "^23.2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+pytest-asyncio = "^0.24.0"
+httpx = "^0.28.0"
+black = "^25.1.0"
+isort = "^6.0.0"
+mypy = "^1.16.0"
+pytest-cov = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
