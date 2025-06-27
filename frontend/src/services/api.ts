@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'\;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -49,7 +49,14 @@ export interface StatsResponse {
   status: string;
 }
 
-export const searchSimilarImages = async (
+export interface HealthResponse {
+  status: string;
+  timestamp: string;
+  version: string;
+  services: Record<string, string>;
+}
+
+export const searchImages = async (
   imageData: string,
   topK: number = 10,
   threshold: number = 0.0
@@ -81,7 +88,38 @@ export const getStats = async (): Promise<StatsResponse> => {
   return response.data;
 };
 
-export const getHealth = async () => {
+export const getHealth = async (): Promise<HealthResponse> => {
   const response = await api.get('/health');
   return response.data;
 };
+
+export const deleteImage = async (imageId: string): Promise<void> => {
+  await api.delete(`/index/${imageId}`);
+};
+
+api.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response) {
+      console.error('API Error:', error.response.data);
+    } else if (error.request) {
+      console.error('No response received:', error.request);
+    } else {
+      console.error('Request setup error:', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default api;

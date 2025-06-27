@@ -1,111 +1,155 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import ImageUpload from './components/ImageUpload';
-import SearchResults from './components/SearchResults';
-import Stats from './components/Stats';
+import { Moon, Sun, Sparkles, Cpu, Database, Zap } from 'lucide-react';
+import SearchInterface from './components/SearchInterface';
+import SystemMonitor from './components/SystemMonitor';
+import PerformanceMetrics from './components/PerformanceMetrics';
+import BackgroundAnimation from './components/BackgroundAnimation';
+import { useThemeStore } from './stores/themeStore';
+
+const queryClient = new QueryClient();
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'upload' | 'search' | 'stats'>('search');
-  const [searchResults, setSearchResults] = useState(null);
+  const { isDark, toggleTheme } = useThemeStore();
+  const [activeView, setActiveView] = useState<'search' | 'monitor'>('search');
 
-  const tabs = [
-    {
-      id: 'search',
-      label: 'Search Images',
-      icon: (
-        <svg className="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      )
-    },
-    {
-      id: 'upload',
-      label: 'Index Images',
-      icon: (
-        <svg className="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-        </svg>
-      )
-    },
-    {
-      id: 'stats',
-      label: 'System Stats',
-      icon: (
-        <svg className="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-      )
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
-  ];
+  }, [isDark]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      <div className="container mx-auto px-4 py-8">
+    <QueryClientProvider client={queryClient}>
+      <div className={`min-h-screen transition-colors duration-500 ${
+        isDark ? 'bg-gray-950' : 'bg-gray-50'
+      }`}>
+        <BackgroundAnimation />
+        
         <motion.header
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="relative z-50"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Image Similarity Search Engine
-          </h1>
-          <p className="text-lg text-gray-600 mb-6">
-            AI-powered image search using CLIP and vector similarity
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-              CLIP Model
-            </span>
-            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-              Qdrant Vector DB
-            </span>
-            <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
-              Redis Cache
-            </span>
-            <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
-              FastAPI
-            </span>
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-pink-600/10 backdrop-blur-xl" />
+          <div className="relative container mx-auto px-6 py-6">
+            <div className="flex items-center justify-between">
+              <motion.div 
+                className="flex items-center space-x-4"
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur-lg opacity-75" />
+                  <div className="relative bg-black/90 p-3 rounded-xl">
+                    <Sparkles className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    Neural Image Search
+                  </h1>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    CLIP-powered similarity engine
+                  </p>
+                </div>
+              </motion.div>
+
+              <div className="flex items-center space-x-6">
+                <div className="flex bg-black/10 dark:bg-white/10 rounded-lg p-1 backdrop-blur-sm">
+                  <button
+                    onClick={() => setActiveView('search')}
+                    className={`px-4 py-2 rounded-md transition-all duration-300 ${
+                      activeView === 'search'
+                        ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg'
+                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Search
+                  </button>
+                  <button
+                    onClick={() => setActiveView('monitor')}
+                    className={`px-4 py-2 rounded-md transition-all duration-300 ${
+                      activeView === 'monitor'
+                        ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg'
+                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Monitor
+                  </button>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={toggleTheme}
+                  className="p-3 bg-black/10 dark:bg-white/10 rounded-lg backdrop-blur-sm hover:bg-black/20 dark:hover:bg-white/20 transition-colors"
+                >
+                  <AnimatePresence mode="wait">
+                    {isDark ? (
+                      <motion.div
+                        key="moon"
+                        initial={{ rotate: -90, opacity: 0 }}
+                        animate={{ rotate: 0, opacity: 1 }}
+                        exit={{ rotate: 90, opacity: 0 }}
+                      >
+                        <Moon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="sun"
+                        initial={{ rotate: 90, opacity: 0 }}
+                        animate={{ rotate: 0, opacity: 1 }}
+                        exit={{ rotate: -90, opacity: 0 }}
+                      >
+                        <Sun className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.button>
+              </div>
+            </div>
           </div>
         </motion.header>
 
-        <motion.nav
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="flex justify-center mb-8"
+          className="container mx-auto px-6 mt-4 mb-8"
         >
-          <div className="bg-white rounded-xl shadow-lg p-2 flex">
-            {tabs.map((tab) => (
-              <motion.button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`relative flex items-center px-6 py-3 rounded-lg transition-all duration-200 font-medium ${
-                  activeTab === tab.id
-                    ? 'text-white'
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                }`}
-                whileHover={{ scale: activeTab === tab.id ? 1 : 1.05 }}
-                whileTap={{ scale: 0.95 }}
+          <div className="flex flex-wrap gap-3 justify-center">
+            {[
+              { icon: Cpu, label: 'CLIP ViT-B/32', color: 'from-blue-500 to-cyan-500' },
+              { icon: Database, label: 'Qdrant Vector DB', color: 'from-purple-500 to-pink-500' },
+              { icon: Zap, label: 'FastAPI + Redis', color: 'from-orange-500 to-red-500' },
+            ].map((tech, i) => (
+              <motion.div
+                key={tech.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 + i * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                className="relative group"
               >
-                {activeTab === tab.id && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-md"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-                <span className="relative z-10 flex items-center">
-                  {tab.icon}
-                  {tab.label}
-                </span>
-              </motion.button>
+                <div className={`absolute inset-0 bg-gradient-to-r ${tech.color} rounded-full blur-md opacity-50 group-hover:opacity-75 transition-opacity`} />
+                <div className="relative flex items-center space-x-2 px-4 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-full border border-white/20 dark:border-gray-700/50">
+                  <tech.icon className="h-4 w-4 text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {tech.label}
+                  </span>
+                </div>
+              </motion.div>
             ))}
           </div>
-        </motion.nav>
+        </motion.div>
 
-        <main>
+        <main className="container mx-auto px-6 pb-12">
           <AnimatePresence mode="wait">
-            {activeTab === 'search' && (
+            {activeView === 'search' ? (
               <motion.div
                 key="search"
                 initial={{ opacity: 0, x: -20 }}
@@ -113,61 +157,32 @@ function App() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
               >
-                <ImageUpload 
-                  mode="search" 
-                  onSearchComplete={setSearchResults}
-                />
+                <SearchInterface />
+                <PerformanceMetrics />
               </motion.div>
-            )}
-            {activeTab === 'upload' && (
+            ) : (
               <motion.div
-                key="upload"
-                initial={{ opacity: 0, x: -20 }}
+                key="monitor"
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
+                exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
               >
-                <ImageUpload 
-                  mode="index" 
-                  onSearchComplete={setSearchResults}
-                />
+                <SystemMonitor />
               </motion.div>
-            )}
-            {activeTab === 'stats' && (
-              <motion.div
-                key="stats"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Stats />
-              </motion.div>
-            )}
-          </AnimatePresence>
-          
-          <AnimatePresence>
-            {searchResults && activeTab === 'search' && (
-              <SearchResults results={searchResults} />
             )}
           </AnimatePresence>
         </main>
 
-        <motion.footer
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="mt-16 text-center text-gray-500 text-sm"
-        >
-          <div className="border-t border-gray-200 pt-8">
-            <p className="mb-2">
-              Built with React, TypeScript, FastAPI, and modern ML technologies
-            </p>
-            <p>© 2025 Image Similarity Search Engine</p>
-          </div>
-        </motion.footer>
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            className: 'dark:bg-gray-800 dark:text-white',
+            duration: 4000,
+          }}
+        />
       </div>
-    </div>
+    </QueryClientProvider>
   );
 }
 
