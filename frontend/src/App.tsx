@@ -50,10 +50,10 @@ function App() {
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    Neural Image Search
+                    Image Similarity Engine
                   </h1>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    CLIP-powered similarity engine
+                    Scalable ML-powered search system
                   </p>
                 </div>
               </motion.div>
