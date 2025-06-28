@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class MillionScaleLoadTester:
-    def __init__(self, api_url: str = "http://localhost:8000", num_clients: int = 100):
+    def __init__(self, api_url: str = "http://localhost:8080", num_clients: int = 100):
         self.api_url = api_url
         self.num_clients = num_clients
         self.results = []
