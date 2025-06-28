@@ -14,6 +14,8 @@ if ! command -v docker-compose &> /dev/null; then
     exit 1
 fi
 
+cd backend
+
 if [ ! -f .env ]; then
     echo "📝 Creating .env file from template..."
     cp .env.example .env
@@ -25,6 +27,8 @@ mkdir -p models data/images logs
 echo "📥 Downloading ML models..."
 poetry run python scripts/download_models.py
 
+cd ..
+
 echo "🐳 Starting Docker services..."
 docker-compose up -d
 
@@ -32,7 +36,9 @@ echo "⏳ Waiting for services to be ready..."
 sleep 30
 
 echo "🗄️ Initializing database..."
+cd backend
 poetry run python scripts/init_database.py
+cd ..
 
 echo "🏥 Running health check..."
 curl -f http://localhost:8000/api/v1/health

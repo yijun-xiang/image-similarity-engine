@@ -1,0 +1,130 @@
+
+services:
+  qdrant-1:
+    image: qdrant/qdrant:v1.14.0
+    container_name: qdrant-1
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data_1:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: 6334
+      QDRANT__SERVICE__HTTP_PORT: 6333
+    networks:
+      - scale-network
+
+  qdrant-2:
+    image: qdrant/qdrant:v1.14.0
+    container_name: qdrant-2
+    ports:
+      - "6335:6333"
+      - "6336:6334"
+    volumes:
+      - qdrant_data_2:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: 6334
+      QDRANT__SERVICE__HTTP_PORT: 6333
+    networks:
+      - scale-network
+
+  qdrant-3:
+    image: qdrant/qdrant:v1.14.0
+    container_name: qdrant-3
+    ports:
+      - "6337:6333"
+      - "6338:6334"
+    volumes:
+      - qdrant_data_3:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: 6334
+      QDRANT__SERVICE__HTTP_PORT: 6333
+    networks:
+      - scale-network
+
+  redis-cluster:
+    image: redis:7-alpine
+    container_name: redis-cluster
+    command: redis-server --maxmemory 2gb --maxmemory-policy allkeys-lru --save ""
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - scale-network
+
+  backend-1:
+    image: image-similarity-backend:latest
+    container_name: backend-1
+    ports:
+      - "8001:8000"
+    environment:
+      QDRANT_HOST: qdrant-1
+      REDIS_HOST: redis-cluster
+      SHARD_COUNT: "3"
+      CACHE_STRATEGY: multi_tier
+      BATCH_SIZE: "1000"
+    depends_on:
+      - qdrant-1
+      - redis-cluster
+    networks:
+      - scale-network
+
+  backend-2:
+    image: image-similarity-backend:latest
+    container_name: backend-2
+    ports:
+      - "8002:8000"
+    environment:
+      QDRANT_HOST: qdrant-2
+      REDIS_HOST: redis-cluster
+      SHARD_COUNT: "3"
+      CACHE_STRATEGY: multi_tier
+      BATCH_SIZE: "1000"
+    depends_on:
+      - qdrant-2
+      - redis-cluster
+    networks:
+      - scale-network
+
+  backend-3:
+    image: image-similarity-backend:latest
+    container_name: backend-3
+    ports:
+      - "8003:8000"
+    environment:
+      QDRANT_HOST: qdrant-3
+      REDIS_HOST: redis-cluster
+      SHARD_COUNT: "3"
+      CACHE_STRATEGY: multi_tier
+      BATCH_SIZE: "1000"
+    depends_on:
+      - qdrant-3
+      - redis-cluster
+    networks:
+      - scale-network
+
+  haproxy:
+    image: haproxy:2.8-alpine
+    container_name: haproxy
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - backend-1
+      - backend-2
+      - backend-3
+    networks:
+      - scale-network
+
+networks:
+  scale-network:
+    driver: bridge
+
+volumes:
+  qdrant_data_1:
+  qdrant_data_2:
+  qdrant_data_3:
+  redis_data:
