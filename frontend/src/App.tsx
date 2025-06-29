@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -35,16 +36,16 @@ function App() {
           className="relative z-50"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-pink-600/10 backdrop-blur-xl" />
-          <div className="relative container mx-auto px-6 py-6">
+          <div className="relative container mx-auto px-4 py-2">
             <div className="flex items-center justify-between">
               <motion.div 
-                className="flex items-center space-x-4"
+                className="flex items-center space-x-3"
                 whileHover={{ scale: 1.02 }}
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur-lg opacity-75" />
-                  <div className="relative bg-black/90 p-3 rounded-xl">
-                    <Sparkles className="h-8 w-8 text-white" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur-md opacity-75" />
+                  <div className="relative bg-black/90 p-2.5 rounded-lg">
+                    <Sparkles className="h-7 w-7 text-white" />
                   </div>
                 </div>
                 <div>
@@ -57,11 +58,11 @@ function App() {
                 </div>
               </motion.div>
 
-              <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-4">
                 <div className="flex bg-black/10 dark:bg-white/10 rounded-lg p-1 backdrop-blur-sm">
                   <button
                     onClick={() => setActiveView('search')}
-                    className={`px-4 py-2 rounded-md transition-all duration-300 ${
+                    className={`px-4 py-2 text-sm rounded-md transition-all duration-300 ${
                       activeView === 'search'
                         ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg'
                         : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -71,7 +72,7 @@ function App() {
                   </button>
                   <button
                     onClick={() => setActiveView('monitor')}
-                    className={`px-4 py-2 rounded-md transition-all duration-300 ${
+                    className={`px-4 py-2 text-sm rounded-md transition-all duration-300 ${
                       activeView === 'monitor'
                         ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg'
                         : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -85,7 +86,7 @@ function App() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={toggleTheme}
-                  className="p-3 bg-black/10 dark:bg-white/10 rounded-lg backdrop-blur-sm hover:bg-black/20 dark:hover:bg-white/20 transition-colors"
+                  className="p-2.5 bg-black/10 dark:bg-white/10 rounded-lg backdrop-blur-sm hover:bg-black/20 dark:hover:bg-white/20 transition-colors"
                 >
                   <AnimatePresence mode="wait">
                     {isDark ? (
@@ -118,7 +119,7 @@ function App() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="container mx-auto px-6 mt-4 mb-8"
+          className="container mx-auto px-4 mt-3 mb-4"
         >
           <div className="flex flex-wrap gap-3 justify-center">
             {[
@@ -146,7 +147,7 @@ function App() {
           </div>
         </motion.div>
 
-        <main className="container mx-auto px-6 pb-12">
+        <main className="container mx-auto px-4 pb-8">
           <AnimatePresence mode="wait">
             {activeView === 'search' ? (
               <motion.div

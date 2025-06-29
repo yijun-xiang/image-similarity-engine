@@ -93,13 +93,13 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
   const isLoading = searchMutation.isPending || indexMutation.isPending;
 
   return (
-    <div className={cn("space-y-8", className)}>
+    <div className={cn("space-y-3", className)}>
       <div className="flex justify-center">
         <motion.div
           layout
-          className="bg-white/10 dark:bg-gray-900/50 backdrop-blur-xl rounded-2xl p-2 border border-white/20 dark:border-gray-700/50"
+          className="bg-white/10 dark:bg-gray-900/50 backdrop-blur-xl rounded-xl p-1 border border-white/20 dark:border-gray-700/50"
         >
-          <div className="flex space-x-2">
+          <div className="flex space-x-1">
             {[
               { value: 'search', label: 'Search Images', icon: Search },
               { value: 'index', label: 'Index New Image', icon: Upload },
@@ -111,7 +111,7 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
                   resetForm();
                 }}
                 className={cn(
-                  "relative px-6 py-3 rounded-xl font-medium transition-all duration-300",
+                  "relative px-5 py-2 rounded-lg text-sm font-medium transition-all duration-300",
                   "flex items-center space-x-2",
                   mode === option.value
                     ? "text-white"
@@ -123,7 +123,7 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
                 {mode === option.value && (
                   <motion.div
                     layoutId="activeMode"
-                    className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl"
+                    className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
@@ -137,13 +137,13 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
 
       <motion.div
         layout
-        className="max-w-2xl mx-auto"
+        className="max-w-3xl mx-auto"
       >
         <div
           {...getRootProps()}
           className={cn(
             "relative group cursor-pointer",
-            "rounded-3xl transition-all duration-500",
+            "rounded-2xl transition-all duration-500",
             "bg-white/10 dark:bg-gray-900/50 backdrop-blur-xl",
             "border-2 border-dashed",
             isDragActive
@@ -154,7 +154,7 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
         >
           <input {...getInputProps()} />
           
-          <div className="p-12">
+          <div className="p-10">
             <AnimatePresence mode="wait">
               {preview ? (
                 <motion.div
@@ -162,13 +162,13 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  className="space-y-6"
+                  className="space-y-4"
                 >
                   <div className="relative max-w-md mx-auto">
                     <img
                       src={preview}
                       alt="Preview"
-                      className="rounded-2xl shadow-2xl w-full"
+                      className="rounded-xl shadow-xl w-full max-h-64 object-contain"
                     />
                     {!isLoading && (
                       <motion.button
@@ -180,7 +180,7 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
                           e.stopPropagation();
                           resetForm();
                         }}
-                        className="absolute -top-3 -right-3 p-2 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors"
+                        className="absolute -top-2 -right-2 p-2 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </motion.button>
@@ -188,12 +188,9 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
                   </div>
                   
                   {imageFile && (
-                    <div className="text-center space-y-1">
+                    <div className="text-center">
                       <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {imageFile.name}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {(imageFile.size / 1024 / 1024).toFixed(2)} MB
+                        {imageFile.name} ({(imageFile.size / 1024 / 1024).toFixed(2)} MB)
                       </p>
                     </div>
                   )}
@@ -204,7 +201,7 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  className="text-center space-y-6"
+                  className="text-center space-y-4"
                 >
                   <div className="relative">
                     <motion.div
@@ -242,12 +239,12 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-3xl flex items-center justify-center"
+                className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl flex items-center justify-center"
               >
-                <div className="text-center space-y-4">
+                <div className="text-center space-y-3">
                   <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {mode === 'search' ? 'Searching for similar images...' : 'Indexing image...'}
+                    {mode === 'search' ? 'Searching...' : 'Indexing...'}
                   </p>
                 </div>
               </motion.div>
@@ -257,33 +254,33 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
 
         {mode === 'index' && preview && !isLoading && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-6 space-y-4"
+            className="mt-4 space-y-3"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Image ID (optional)
                 </label>
                 <input
                   type="text"
                   value={imageId}
                   onChange={(e) => setImageId(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-300/50 dark:border-gray-700/50 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-2.5 text-sm bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-300/50 dark:border-gray-700/50 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   placeholder="auto-generated if empty"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Tags (comma-separated)
                 </label>
                 <input
                   type="text"
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-300/50 dark:border-gray-700/50 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-2.5 text-sm bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-300/50 dark:border-gray-700/50 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   placeholder="nature, landscape, sunset"
                 />
               </div>
@@ -293,7 +290,7 @@ export default function SearchInterface({ className }: SearchInterfaceProps) {
               onClick={handleIndex}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2"
+              className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2"
             >
               <Upload className="h-5 w-5" />
               <span>Index Image</span>
