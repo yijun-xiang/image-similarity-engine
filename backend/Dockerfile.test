@@ -1,0 +1,3 @@
+FROM nginx:alpine
+RUN echo '{"status": "healthy"}' > /usr/share/nginx/html/health
+EXPOSE 80

@@ -30,7 +30,7 @@ class VectorService:
                 host=settings.qdrant_host,
                 port=settings.qdrant_port,
                 timeout=settings.search_timeout,
-                check_compatibility=False
+                
             )
             
             await asyncio.get_event_loop().run_in_executor(

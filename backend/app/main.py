@@ -29,14 +29,20 @@ async def lifespan(app: FastAPI):
         await ml_service.load_model()
         
         logger.info("Connecting to vector database...")
-        vector_service = get_vector_service()
-        await vector_service.connect()
+        try:
+            vector_service = get_vector_service()
+            await vector_service.connect()
+        except Exception as e:
+            logger.warning(f"Vector database connection failed: {str(e)} - continuing without it")
         
         logger.info("Connecting to cache service...")
-        cache_service = get_cache_service()
-        await cache_service.connect()
+        try:
+            cache_service = get_cache_service()
+            await cache_service.connect()
+        except Exception as e:
+            logger.warning(f"Cache service connection failed: {str(e)} - continuing without it")
         
-        logger.info("All services initialized successfully")
+        logger.info("All available services initialized successfully")
         
     except Exception as e:
         logger.error(f"Failed to initialize services: {str(e)}")
