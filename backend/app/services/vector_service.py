@@ -26,18 +26,26 @@ class VectorService:
             return
         
         try:
-            self.client = QdrantClient(
-                host=settings.qdrant_host,
-                port=settings.qdrant_port,
-                timeout=settings.search_timeout,
-                
-            )
+            qdrant_host = settings.qdrant_host
+            
+            if qdrant_host.startswith('http://') or qdrant_host.startswith('https://'):
+                self.client = QdrantClient(
+                    url=qdrant_host,
+                    api_key=settings.qdrant_api_key,
+                    timeout=settings.search_timeout,
+                )
+            else:
+                self.client = QdrantClient(
+                    host=qdrant_host,
+                    port=settings.qdrant_port,
+                    timeout=settings.search_timeout,
+                )
             
             await asyncio.get_event_loop().run_in_executor(
                 None, self.client.get_collections
             )
             
-            logger.info(f"Connected to Qdrant at {settings.qdrant_host}:{settings.qdrant_port}")
+            logger.info(f"Connected to Qdrant at {qdrant_host}")
             
             await self.ensure_collection()
             
