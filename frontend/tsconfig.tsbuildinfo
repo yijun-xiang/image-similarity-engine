@@ -1,1 +1,0 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/backgroundanimation.tsx","./src/components/performancemetrics.tsx","./src/components/searchinterface.tsx","./src/components/searchresults.tsx","./src/components/systemmonitor.tsx","./src/services/api.ts","./src/stores/themestore.ts","./src/utils/cn.ts"],"errors":true,"version":"5.8.3"}
