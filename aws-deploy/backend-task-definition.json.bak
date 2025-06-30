@@ -1,0 +1,33 @@
+{
+  "family": "image-similarity-backend",
+  "taskRoleArn": "arn:aws:iam::035711439189:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::035711439189:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "2048",
+  "memory": "4096",
+  "containerDefinitions": [
+    {
+      "name": "backend",
+      "image": "035711439189.dkr.ecr.us-west-2.amazonaws.com/image-similarity:latest",
+      "portMappings": [{"containerPort": 8000}],
+      "environment": [
+        {"name": "QDRANT_HOST", "value": "10.0.1.233"},
+        {"name": "QDRANT_PORT", "value": "6333"},
+        {"name": "REDIS_HOST", "value": "image-similarity-redis.crczzx.0001.usw2.cache.amazonaws.com"},
+        {"name": "REDIS_PORT", "value": "6379"},
+        {"name": "MODEL_NAME", "value": "openai/clip-vit-base-patch32"},
+        {"name": "DEVICE", "value": "cpu"}
+      ],
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/image-similarity",
+          "awslogs-region": "us-west-2",
+          "awslogs-stream-prefix": "backend"
+        }
+      }
+    }
+  ]
+}
