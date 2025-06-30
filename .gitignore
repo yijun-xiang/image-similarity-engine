@@ -128,3 +128,4 @@ test_*.py
 coverage.xml
 *.cover
 .hypothesis/
+.env.production
